@@ -1,0 +1,48 @@
+# Travis CI Configuration File
+
+sudo: false
+language: php
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+env:
+  global:
+    - secure: "FgCl8NImpy0giLO/6nR+588kXUjcpX/TFNnFydd6Zjgjvxjk4GVAhNPSukUZgLNF6EjNPmJkzG97PV1aMtEddT7aO3sInKxORYW1FAZsz6PKnkbriYrAbop039RIPll74XQmvP+Cz2MDr5g5cNDQ8u32tVI0dlkGDzBxx8Lxy30="
+    - GH_REPO_SLUG: Limych/GeniBase
+    - GH_REF: github.com/${TRAVIS_REPO_SLUG}.git
+    - GH_REPO_URL: git://${TRAVIS_REPO_SLUG}
+
+matrix:
+  include:
+    - php: 5.5
+      env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
+    - php: 5.6
+    - php: 7.0
+    - php: 7.1
+      env: DOCS=yes
+    - php: hhvm
+    - php: nightly
+  allow_failures:
+    - php: hhvm
+    - php: nightly
+  fast_finish: true
+
+install:
+  - mkdir -p build/logs
+  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction
+
+script:
+  - php vendor/bin/phpunit -v
+  - if [[ "$DOCS" = "yes" ]]; then composer scan; fi;
+
+after_success:
+  - |
+    if [[ "$DOCS" = "yes" ]]; then travis_retry php vendor/bin/coveralls -v --exclude-no-stmt; fi;
+    if [[ "$DOCS" = "yes" && "$TRAVIS_REPO_SLUG" == "$GH_REPO_SLUG" && $TRAVIS_BRANCH = 'master' && $TRAVIS_PULL_REQUEST = 'false' ]]; then
+      sh docs.sh
+    fi
+    
+notifications:
+  email: false
