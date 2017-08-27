@@ -4,21 +4,17 @@ vendor/
 
 # Configuration files with possibly sensitive information
 /.coveralls.yml
-/app/configs/*.php
+/etc/cfg/*.php
 
 # Files and folders related to build/test tools
-.maintenance
-/npm-debug.log
-logs/
-!logs/.gitkeep
 
 # Ignore other .gitignore files to allow for personal customizations
 .gitignore
 !/.gitignore
 
 # Temporary files
-.temp/
-tmp/
+var/
+!/.gitkeep
 
 # Files related to applying patches
 *.rej
