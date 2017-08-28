@@ -13,8 +13,8 @@ vendor/
 !/.gitignore
 
 # Temporary files
-var/
-!/.gitkeep
+tmp/
+var/*/
 
 # Files related to applying patches
 *.rej
@@ -33,6 +33,10 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
+# Allow .gitkeep
+!*/.gitkeep
+
+
 
 
 #################
@@ -43,7 +47,6 @@ Thumbs.db
 .project
 .metadata
 /bin/
-tmp/
 *.tmp
 *.bak
 *.swp
